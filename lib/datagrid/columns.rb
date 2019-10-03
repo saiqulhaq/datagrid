@@ -502,7 +502,9 @@ module Datagrid
         end
         @cache[column.name] ||= {}
         @cache[column.name][key] ||= {}
-        @cache[column.name][key][type] ||= yield
+        @cache[column.name][key][type] ||= Rails.cache.fetch([column.name, key, type].join('-')) do
+          yield
+        end
       end
 
       def cache_key(asset)
